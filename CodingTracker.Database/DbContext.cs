@@ -21,13 +21,15 @@ public class DbContext
 
       string createTablesSql = @"CREATE TABLE IF NOT EXISTS sessions(
                               session_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              start_date TEXT,
-                              end_date TEXT,
+                              start_time TEXT,
+                              end_time TEXT,
                               duration INT);
                               CREATE TABLE IF NOT EXISTS goals(
                               goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              start_date TEXT,
-                              target_duration TEXT)";
+                              start_time TEXT,
+                              finish_time TEXT,
+                              target_duration TEXT,
+                              is_completed INTEGER)";
 
       using (SqliteCommand createCommand = new SqliteCommand(createTablesSql, connection))
       {
