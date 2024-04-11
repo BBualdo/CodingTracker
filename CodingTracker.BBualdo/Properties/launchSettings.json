@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker.BBualdo": {
+      "commandName": "Project",
+      "workingDirectory": "F:\\C#Academy\\CodingTracker.BBualdo\\CodingTracker.Database\\"
+    }
+  }
+}
