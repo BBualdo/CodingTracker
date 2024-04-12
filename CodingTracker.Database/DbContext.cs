@@ -1,16 +1,21 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.Database;
 
 public class DbContext
 {
-  public string ConnectionString { get; set; } = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+  private readonly SessionDataAccess _sessionDataAccess;
 
   public DbContext()
   {
     CreateTables();
     SeedData();
+    _sessionDataAccess = new SessionDataAccess();
+  }
+
+  public bool GetAllSessions()
+  {
+    _
   }
 
   private void CreateTables()
@@ -80,4 +85,5 @@ public class DbContext
 
     Console.Clear();
   }
+
 }
