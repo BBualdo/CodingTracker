@@ -19,6 +19,14 @@ public class DbContext
     _sessionDataAccess = new SessionDataAccess(_connectionString);
   }
 
+  public bool DeleteSession()
+  {
+    AnsiConsole.Clear();
+
+    _sessionDataAccess.DeleteSession();
+    return true;
+  }
+
   public bool UpdateSession()
   {
     AnsiConsole.Clear();
@@ -32,9 +40,6 @@ public class DbContext
     AnsiConsole.Clear();
 
     _sessionDataAccess.InsertSession();
-
-    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to return to Main Menu");
-    Console.ReadKey();
     return true;
   }
 

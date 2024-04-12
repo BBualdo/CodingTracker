@@ -55,7 +55,7 @@ public class AppEngine
         Db.UpdateSession();
         break;
       case "Delete Session":
-        // DeleteSession()
+        Db.DeleteSession();
         break;
     }
   }

@@ -30,7 +30,7 @@ public class SessionDataAccess
     return sessions;
   }
 
-  public void InsertSession()
+  public bool InsertSession()
   {
     using (SqliteConnection connection = new SqliteConnection(_connectionString))
     {
@@ -47,6 +47,10 @@ public class SessionDataAccess
         insertCommand.ExecuteNonQuery();
       }
     }
+
+    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to return to Main Menu");
+    Console.ReadKey();
+    return true;
   }
 
   public bool UpdateSession()
@@ -84,6 +88,41 @@ public class SessionDataAccess
     }
 
     AnsiConsole.Markup("[green]Update Completed.[/] Press any key to return to Main Menu.");
+    Console.ReadKey();
+    return true;
+  }
+
+  public bool DeleteSession()
+  {
+    List<CodingSession> sessions = GetAllSessions();
+    ConsoleEngine.GetCodingSessionsTable(sessions);
+    int id = AnsiConsole.Ask<int>("Type [green]ID[/] of the session you want to delete: ");
+
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
+    {
+      connection.Open();
+
+      string selectSql = $"SELECT EXISTS(SELECT 1 FROM sessions WHERE session_id={id})";
+
+      using (SqliteCommand selectCommand = new SqliteCommand(selectSql, connection))
+      {
+        if (Convert.ToInt32(selectCommand.ExecuteScalar()) == 0)
+        {
+          AnsiConsole.Markup("[red]Session with given id doesn't exists.[/] Press any key to return to Main Menu.");
+          Console.ReadKey();
+          return false;
+        }
+      }
+
+      string deleteSql = $"DELETE FROM sessions WHERE session_id={id}";
+
+      using (SqliteCommand updateCommand = new SqliteCommand(deleteSql, connection))
+      {
+        updateCommand.ExecuteNonQuery();
+      }
+    }
+
+    AnsiConsole.Markup("[green]Deleting Completed.[/] Press any key to return to Main Menu.");
     Console.ReadKey();
     return true;
   }
