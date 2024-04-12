@@ -40,8 +40,6 @@ public class DbContext
 
   private void SeedData()
   {
-    Console.WriteLine("Loading...");
-
     using (SqliteConnection connection = new SqliteConnection(ConnectionString))
     {
       connection.Open();
@@ -56,6 +54,8 @@ public class DbContext
 
         if (recordsNumber == 0)
         {
+          Console.WriteLine("Loading...");
+
           for (int i = 0; i < 10; i++)
           {
             DateTime startDateTime = DateTime.Now.AddDays(-random.Next(0, 365)).AddHours(random.Next(0, 24)).AddMinutes(random.Next(0, 60));
