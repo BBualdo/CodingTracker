@@ -4,22 +4,24 @@ namespace CodingTracker.Database.Models
 {
   public class CodingSession
   {
-    public int Id { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public int Session_Id { get; set; }
+    public string Start_Time { get; set; }
+    public string End_Time { get; set; }
     public int Duration { get; set; }
 
-    public CodingSession(int id, string startDate, string endDate)
+    public CodingSession() { }
+
+    public CodingSession(int session_Id, string start_Time, string end_Time)
     {
-      Id = id;
-      StartDate = DateTime.ParseExact(startDate, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
-      EndDate = DateTime.ParseExact(endDate, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
+      Session_Id = session_Id;
+      Start_Time = start_Time;
+      End_Time = end_Time;
       Duration = CalculateDuration();
     }
 
     public int CalculateDuration()
     {
-      TimeSpan duration = EndDate - StartDate;
+      TimeSpan duration = DateTime.ParseExact(End_Time, "dd-MM-yy HH:mm", new CultureInfo("en-US")) - DateTime.ParseExact(Start_Time, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
       return duration.Minutes;
     }
   }

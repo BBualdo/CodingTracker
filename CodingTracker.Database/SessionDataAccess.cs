@@ -1,17 +1,15 @@
 ﻿using CodingTracker.Database.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.Database;
 
 public class SessionDataAccess
 {
   private readonly string _connectionString;
-
-  public SessionDataAccess()
+  public SessionDataAccess(string connectionString)
   {
-    _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+    _connectionString = connectionString;
   }
 
   public List<CodingSession> GetAllSessions()

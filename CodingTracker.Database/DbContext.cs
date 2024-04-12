@@ -1,26 +1,57 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using CodingTracker.Database.Models;
+using Microsoft.Data.Sqlite;
+using Spectre.Console;
+using System.Configuration;
 
 namespace CodingTracker.Database;
 
 public class DbContext
 {
+  private readonly string _connectionString;
   private readonly SessionDataAccess _sessionDataAccess;
 
   public DbContext()
   {
+    _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
     CreateTables();
     SeedData();
-    _sessionDataAccess = new SessionDataAccess();
+    _sessionDataAccess = new SessionDataAccess(_connectionString);
   }
 
   public bool GetAllSessions()
   {
-    _
+    AnsiConsole.Clear();
+
+    List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
+
+    if (sessions.Count == 0)
+    {
+      AnsiConsole.WriteLine("Sessions list is empty. Create one first. Press any key to return to Main Menu.");
+      Console.ReadKey();
+      return false;
+    }
+
+    Table table = new Table();
+    table.AddColumn(new TableColumn("ID"));
+    table.AddColumn(new TableColumn("Start Date"));
+    table.AddColumn(new TableColumn("End Date"));
+    table.AddColumn(new TableColumn("Duration"));
+
+    foreach (CodingSession session in sessions)
+    {
+      table.AddRow(session.Session_Id.ToString(), session.Start_Time.ToString(), session.End_Time.ToString(), session.Duration.ToString());
+    }
+
+    AnsiConsole.Write(table);
+
+    AnsiConsole.WriteLine("Press any key to return to Main Menu.");
+    Console.ReadKey();
+    return true;
   }
 
   private void CreateTables()
   {
-    using (SqliteConnection connection = new SqliteConnection(ConnectionString))
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
     {
       connection.Open();
 
@@ -45,7 +76,7 @@ public class DbContext
 
   private void SeedData()
   {
-    using (SqliteConnection connection = new SqliteConnection(ConnectionString))
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
     {
       connection.Open();
 
@@ -68,11 +99,11 @@ public class DbContext
 
             TimeSpan durationTimeSpan = endDateTime - startDateTime;
 
-            string startDate = startDateTime.ToString("dd-MM-yy HH:mm");
-            string endDate = endDateTime.ToString("dd-MM-yy HH:mm");
+            string startTime = startDateTime.ToString("dd-MM-yy HH:mm");
+            string endTime = endDateTime.ToString("dd-MM-yy HH:mm");
             int duration = Convert.ToInt32(durationTimeSpan.TotalMinutes);
 
-            string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";
+            string insertSql = $"INSERT INTO sessions(start_time, end_time, duration) VALUES('{startTime}', '{endTime}', {duration})";
 
             using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
             {
