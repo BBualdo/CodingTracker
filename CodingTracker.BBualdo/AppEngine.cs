@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Database;
+using CodingTracker.Database.Helpers;
 using Spectre.Console;
 
 namespace CodingTracker.BBualdo;
@@ -51,7 +52,7 @@ public class AppEngine
         Db.InsertSession();
         break;
       case "Update Session":
-        // UpdateSession()
+        Db.UpdateSession();
         break;
       case "Delete Session":
         // DeleteSession()

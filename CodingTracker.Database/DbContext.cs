@@ -1,4 +1,5 @@
-﻿using CodingTracker.Database.Models;
+﻿using CodingTracker.Database.Helpers;
+using CodingTracker.Database.Models;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
 using System.Configuration;
@@ -18,13 +19,21 @@ public class DbContext
     _sessionDataAccess = new SessionDataAccess(_connectionString);
   }
 
+  public bool UpdateSession()
+  {
+    AnsiConsole.Clear();
+
+    _sessionDataAccess.UpdateSession();
+    return true;
+  }
+
   public bool InsertSession()
   {
     AnsiConsole.Clear();
 
     _sessionDataAccess.InsertSession();
 
-    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to continue");
+    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to return to Main Menu");
     Console.ReadKey();
     return true;
   }
@@ -35,25 +44,7 @@ public class DbContext
 
     List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
 
-    if (sessions.Count == 0)
-    {
-      AnsiConsole.WriteLine("Sessions list is empty. Create one first. Press any key to return to Main Menu.");
-      Console.ReadKey();
-      return false;
-    }
-
-    Table table = new Table();
-    table.AddColumn(new TableColumn("ID"));
-    table.AddColumn(new TableColumn("Start Date"));
-    table.AddColumn(new TableColumn("End Date"));
-    table.AddColumn(new TableColumn("Duration"));
-
-    foreach (CodingSession session in sessions)
-    {
-      table.AddRow(session.Session_Id.ToString(), session.Start_Date.ToString(), session.End_Date.ToString(), session.Duration.ToString());
-    }
-
-    AnsiConsole.Write(table);
+    ConsoleEngine.GetCodingSessionsTable(sessions);
 
     AnsiConsole.WriteLine("Press any key to return to Main Menu.");
     Console.ReadKey();
