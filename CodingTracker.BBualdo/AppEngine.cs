@@ -48,7 +48,7 @@ public class AppEngine
         Db.GetAllSessions();
         break;
       case "Insert Session":
-        // InsertSession()
+        Db.InsertSession();
         break;
       case "Update Session":
         // UpdateSession()

@@ -1,4 +1,5 @@
-﻿using CodingTracker.Database.Models;
+﻿using CodingTracker.Database.Helpers;
+using CodingTracker.Database.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -26,5 +27,24 @@ public class SessionDataAccess
     }
 
     return sessions;
+  }
+
+  public void InsertSession()
+  {
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
+    {
+      connection.Open();
+
+      string startDate = UserInput.GetStartDate();
+      string endDate = UserInput.GetEndDate(startDate);
+      int duration = DateTimeHelper.CalculateDuration(startDate, endDate);
+
+      string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";
+
+      using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
+      {
+        insertCommand.ExecuteNonQuery();
+      }
+    }
   }
 }

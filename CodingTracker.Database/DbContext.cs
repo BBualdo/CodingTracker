@@ -18,6 +18,17 @@ public class DbContext
     _sessionDataAccess = new SessionDataAccess(_connectionString);
   }
 
+  public bool InsertSession()
+  {
+    AnsiConsole.Clear();
+
+    _sessionDataAccess.InsertSession();
+
+    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to continue");
+    Console.ReadKey();
+    return true;
+  }
+
   public bool GetAllSessions()
   {
     AnsiConsole.Clear();
@@ -39,7 +50,7 @@ public class DbContext
 
     foreach (CodingSession session in sessions)
     {
-      table.AddRow(session.Session_Id.ToString(), session.Start_Time.ToString(), session.End_Time.ToString(), session.Duration.ToString());
+      table.AddRow(session.Session_Id.ToString(), session.Start_Date.ToString(), session.End_Date.ToString(), session.Duration.ToString());
     }
 
     AnsiConsole.Write(table);
@@ -57,13 +68,13 @@ public class DbContext
 
       string createTablesSql = @"CREATE TABLE IF NOT EXISTS sessions(
                               session_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              start_time TEXT,
-                              end_time TEXT,
+                              start_date TEXT,
+                              end_date TEXT,
                               duration INT);
                               CREATE TABLE IF NOT EXISTS goals(
                               goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              start_time TEXT,
-                              finish_time TEXT,
+                              start_date TEXT,
+                              finish_date TEXT,
                               target_duration TEXT,
                               is_completed INTEGER)";
 
@@ -99,11 +110,11 @@ public class DbContext
 
             TimeSpan durationTimeSpan = endDateTime - startDateTime;
 
-            string startTime = startDateTime.ToString("dd-MM-yy HH:mm");
-            string endTime = endDateTime.ToString("dd-MM-yy HH:mm");
+            string startDate = startDateTime.ToString("dd-MM-yy HH:mm");
+            string endDate = endDateTime.ToString("dd-MM-yy HH:mm");
             int duration = Convert.ToInt32(durationTimeSpan.TotalMinutes);
 
-            string insertSql = $"INSERT INTO sessions(start_time, end_time, duration) VALUES('{startTime}', '{endTime}', {duration})";
+            string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";
 
             using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
             {
