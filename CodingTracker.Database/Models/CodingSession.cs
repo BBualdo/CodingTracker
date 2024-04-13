@@ -11,9 +11,9 @@ public class CodingSession
 
   public CodingSession() { }
 
-  public CodingSession(int session_Id, string startDate, string endDate)
+  public CodingSession(int sessionId, string startDate, string endDate)
   {
-    Session_Id = session_Id;
+    Session_Id = sessionId;
     Start_Date = startDate;
     End_Date = endDate;
     Duration = DateTimeHelper.CalculateDuration(Start_Date, End_Date);

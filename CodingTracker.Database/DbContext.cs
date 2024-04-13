@@ -5,12 +5,13 @@ using Microsoft.Data.Sqlite;
 using Spectre.Console;
 using System.Configuration;
 
-namespace CodingTracker.Database;
+namespace CodingTracker.Database.DbContext;
 
 public class DbContext
 {
   private readonly string _connectionString;
   private readonly SessionDataAccess _sessionDataAccess;
+  private readonly GoalsDataAccess _goalsDataAccess;
 
   public DbContext()
   {
@@ -18,6 +19,18 @@ public class DbContext
     CreateTables();
     SeedData();
     _sessionDataAccess = new SessionDataAccess(_connectionString);
+    _goalsDataAccess = new GoalsDataAccess(_connectionString);
+  }
+
+  public bool GetAllGoals(bool filterByCompleted = false)
+  {
+    List<Goal> goals = _goalsDataAccess.GetAllGoals(filterByCompleted);
+
+    ConsoleEngine.GetGoalsTable(goals);
+
+    AnsiConsole.WriteLine("Press any key to return to Main Menu.");
+    Console.ReadKey();
+    return true;
   }
 
   public bool GetReport(ReportOptions reportOption, OrderOptions? orderOption)
@@ -108,8 +121,8 @@ public class DbContext
                               CREATE TABLE IF NOT EXISTS goals(
                               goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
                               start_date TEXT,
-                              finish_date TEXT,
-                              target_duration TEXT,
+                              end_date TEXT,
+                              target_duration INTEGER,
                               is_completed INTEGER)";
 
       using (SqliteCommand createCommand = new SqliteCommand(createTablesSql, connection))
@@ -125,17 +138,18 @@ public class DbContext
     {
       connection.Open();
 
-      string countRecordsSql = "SELECT COUNT(*) FROM sessions";
+      string countSessionsSql = "SELECT COUNT(*) FROM sessions";
+      string countGoalsSql = "SELECT COUNT(*) FROM goals";
 
-      using (SqliteCommand countCommand = new SqliteCommand(countRecordsSql, connection))
+      Random random = new Random();
+
+      using (SqliteCommand countCommand = new SqliteCommand(countSessionsSql, connection))
       {
         int recordsNumber = Convert.ToInt32(countCommand.ExecuteScalar());
 
-        Random random = new Random();
-
         if (recordsNumber == 0)
         {
-          Console.WriteLine("Loading...");
+          Console.WriteLine("Loading sessions...");
 
           for (int i = 0; i < 10; i++)
           {
@@ -149,6 +163,33 @@ public class DbContext
             int duration = Convert.ToInt32(durationTimeSpan.TotalMinutes);
 
             string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";
+
+            using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
+            {
+              insertCommand.ExecuteNonQuery();
+            }
+          }
+        }
+      }
+      using (SqliteCommand countCommand = new SqliteCommand(countGoalsSql, connection))
+      {
+        int recordsNumber = Convert.ToInt32(countCommand.ExecuteScalar());
+
+        if (recordsNumber == 0)
+        {
+          Console.WriteLine("Loading goals...");
+
+          for (int i = 0; i < 10; i++)
+          {
+            DateTime startDateTime = DateTime.Now.AddDays(-random.Next(0, 365)).AddHours(random.Next(0, 24)).AddMinutes(random.Next(0, 60));
+            DateTime endDateTime = startDateTime.AddHours(random.Next(0, 7)).AddMinutes(random.Next(0, 60));
+
+            string startDate = startDateTime.ToString("yyyy-MM-dd HH:mm");
+            string endDate = endDateTime.ToString("yyyy-MM-dd HH:mm");
+            int targetDuration = random.Next(60, 361);
+            int isCompleted = random.Next(0, 2);
+
+            string insertSql = $"INSERT INTO goals(start_date, end_date, target_duration, is_completed) VALUES('{startDate}', '{endDate}', {targetDuration}, {isCompleted})";
 
             using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
             {

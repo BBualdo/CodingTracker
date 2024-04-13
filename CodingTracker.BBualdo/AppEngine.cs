@@ -1,4 +1,4 @@
-﻿using CodingTracker.Database;
+﻿using CodingTracker.Database.DbContext;
 using CodingTracker.Database.enums;
 using CodingTracker.Database.Helpers;
 using Spectre.Console;
@@ -83,7 +83,7 @@ public class AppEngine
       case "Back":
         break;
       case "Get All Goals":
-        // GetAllGoals()
+        Db.GetAllGoals();
         break;
       case "Add Goal":
         // InsertGoal()
@@ -92,7 +92,7 @@ public class AppEngine
         // DeleteGoal()
         break;
       case "Get Completed Goals":
-        // GetCompletedGoals()
+        Db.GetAllGoals(true);
         break;
     }
   }
