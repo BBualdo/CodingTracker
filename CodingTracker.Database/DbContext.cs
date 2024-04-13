@@ -1,4 +1,5 @@
-﻿using CodingTracker.Database.Helpers;
+﻿using CodingTracker.Database.enums;
+using CodingTracker.Database.Helpers;
 using CodingTracker.Database.Models;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
@@ -17,6 +18,30 @@ public class DbContext
     CreateTables();
     SeedData();
     _sessionDataAccess = new SessionDataAccess(_connectionString);
+  }
+
+  public bool GetReport(ReportOptions reportOption, OrderOptions? orderOption)
+  {
+    List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
+    List<CodingSession> orderedSessions;
+    if (orderOption == OrderOptions.ASC)
+    {
+      orderedSessions = sessions.OrderBy(session => session.Duration).ToList();
+    }
+    else if (orderOption == OrderOptions.DESC)
+    {
+      orderedSessions = sessions.OrderByDescending(session => session.Duration).ToList();
+    }
+    else
+    {
+      orderedSessions = sessions;
+    }
+
+    ConsoleEngine.GetCodingSessionsTable(orderedSessions);
+
+    AnsiConsole.WriteLine("Press any key to return to Main Menu.");
+    Console.ReadKey();
+    return true;
   }
 
   public bool DeleteSession()

@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Database;
+using CodingTracker.Database.enums;
 using CodingTracker.Database.Helpers;
 using Spectre.Console;
 
@@ -49,7 +50,7 @@ public class AppEngine
 
   public void SessionsMenu()
   {
-    string choice = ConsoleEngine.GetSelection("SESSIONS MENU", "What would you like to do?", ["Back", "Get All Sessions", "Insert Session", "Update Session", "Delete Session"]);
+    string choice = ConsoleEngine.GetSelection("SESSIONS MENU", "What would you like to do?", ["Back", "Get All Sessions", "Insert Session", "Update Session", "Delete Session", "Get Reports"]);
 
     switch (choice)
     {
@@ -66,6 +67,9 @@ public class AppEngine
         break;
       case "Delete Session":
         Db.DeleteSession();
+        break;
+      case "Get Reports":
+        ReportsMenu();
         break;
     }
   }
@@ -91,6 +95,58 @@ public class AppEngine
         // GetCompletedGoals()
         break;
     }
+  }
+
+  public void ReportsMenu()
+  {
+    string choice = ConsoleEngine.GetSelection("REPORTS MENU", "Select period:", ["Back", "Daily Report", "Weekly Report", "Monthly Report", "Yearly Report"]);
+    ReportOptions reportOption;
+    OrderOptions? orderOption;
+
+    switch (choice)
+    {
+      case "Back":
+        SessionsMenu();
+        break;
+      case "Daily Report":
+        reportOption = ReportOptions.Daily;
+        orderOption = GetOrderOption();
+        Db.GetReport(reportOption, orderOption);
+        break;
+      case "Weekly Report":
+        reportOption = ReportOptions.Weekly;
+        orderOption = GetOrderOption();
+        Db.GetReport(reportOption, orderOption);
+        break;
+      case "Monthly Report":
+        reportOption = ReportOptions.Monthly;
+        orderOption = GetOrderOption();
+        Db.GetReport(reportOption, orderOption);
+        break;
+      case "Yearly Report":
+        reportOption = ReportOptions.Yearly;
+        orderOption = GetOrderOption();
+        Db.GetReport(reportOption, orderOption);
+        break;
+    }
+  }
+
+  private OrderOptions? GetOrderOption()
+  {
+    string choice = ConsoleEngine.GetSelection("REPORTS MENU", "Select order option:", ["Back", "Ascending", "Descending"]);
+
+    switch (choice)
+    {
+      case "Back":
+        ReportsMenu();
+        break;
+      case "Ascending":
+        return OrderOptions.ASC;
+      case "Descending":
+        return OrderOptions.DESC;
+    }
+
+    return null;
   }
 
   private string[]? StartCoding()
