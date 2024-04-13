@@ -162,8 +162,8 @@ public class AppEngine
     {
       Stopwatch.Stop();
 
-      string startDate = Stopwatch.StartDate.ToString("dd-MM-yy HH:mm");
-      string endDate = Stopwatch.StopDate.ToString("dd-MM-yy HH:mm");
+      string startDate = Stopwatch.StartDate.ToString("yyyy-MM-dd HH:mm");
+      string endDate = Stopwatch.StopDate.ToString("yyyy-MM-dd HH:mm");
       return [startDate, endDate];
     }
 

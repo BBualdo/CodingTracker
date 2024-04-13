@@ -140,8 +140,8 @@ public class DbContext
 
             TimeSpan durationTimeSpan = endDateTime - startDateTime;
 
-            string startDate = startDateTime.ToString("dd-MM-yy HH:mm");
-            string endDate = endDateTime.ToString("dd-MM-yy HH:mm");
+            string startDate = startDateTime.ToString("yyyy-MM-dd HH:mm");
+            string endDate = endDateTime.ToString("yyyy-MM-dd HH:mm");
             int duration = Convert.ToInt32(durationTimeSpan.TotalMinutes);
 
             string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";

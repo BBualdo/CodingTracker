@@ -7,25 +7,25 @@ public class DateTimeValidator
 {
   public static bool IsValid(string date)
   {
-    if (DateTime.TryParseExact(date, "dd-MM-yy HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime temp))
+    if (DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime temp))
     {
       if (temp < new DateTime(2000, 1, 1) || temp > DateTime.Now)
       {
-        AnsiConsole.Markup("[red]Date and time must be in the past and can't be older than 01-01-00 00:00.[/] ");
+        AnsiConsole.Markup("[red]Date and time must be in the past and can't be older than 2000-01-01 00:00.[/] ");
         return false;
       }
 
       return true;
     };
 
-    AnsiConsole.Markup("[red]Invalid date. Must be in format (dd-MM-yy HH:mm).[/] ");
+    AnsiConsole.Markup("[red]Invalid date. Must be in format (yyyy-MM-dd HH:mm).[/] ");
     return false;
   }
 
   public static bool AreValid(string startDate, string endDate)
   {
-    DateTime startDateTemp = DateTime.ParseExact(startDate, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
-    DateTime endDateTemp = DateTime.ParseExact(endDate, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
+    DateTime startDateTemp = DateTime.ParseExact(startDate, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"));
+    DateTime endDateTemp = DateTime.ParseExact(endDate, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"));
 
     if (endDateTemp > startDateTemp)
     {
