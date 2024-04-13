@@ -22,6 +22,8 @@ public class DbContext
 
   public bool GetReport(ReportOptions reportOption, OrderOptions? orderOption)
   {
+    AnsiConsole.Clear();
+
     List<CodingSession> sessions = _sessionDataAccess.GetAllSessions(reportOption);
     List<CodingSession> orderedSessions;
     if (orderOption == OrderOptions.ASC)
@@ -38,6 +40,8 @@ public class DbContext
     }
 
     ConsoleEngine.GetCodingSessionsTable(orderedSessions);
+
+    ConsoleEngine.GetDurationSummary(orderedSessions, reportOption);
 
     AnsiConsole.WriteLine("Press any key to return to Main Menu.");
     Console.ReadKey();

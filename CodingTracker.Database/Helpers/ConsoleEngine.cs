@@ -1,4 +1,5 @@
-﻿using CodingTracker.Database.Models;
+﻿using CodingTracker.Database.enums;
+using CodingTracker.Database.Models;
 using Spectre.Console;
 
 namespace CodingTracker.Database.Helpers;
@@ -40,5 +41,38 @@ public class ConsoleEngine
     }
 
     AnsiConsole.Write(table);
+  }
+
+  public static void GetDurationSummary(List<CodingSession> sessions, ReportOptions reportOption)
+  {
+    int durationSum = 0;
+    string period = "";
+
+    foreach (CodingSession session in sessions)
+    {
+      durationSum += session.Duration;
+    }
+
+    switch (reportOption)
+    {
+      case ReportOptions.Daily:
+        period = "today";
+        break;
+      case ReportOptions.Weekly:
+        period = "this week";
+        break;
+      case ReportOptions.Monthly:
+        period = "this month";
+        break;
+      case ReportOptions.Yearly:
+        period = "this year";
+        break;
+    }
+
+    int hours = durationSum / 60;
+    int minutes = durationSum % 60;
+
+
+    AnsiConsole.Markup($"You were coding for [green]{hours}h {minutes}m[/] {period}. ");
   }
 }
