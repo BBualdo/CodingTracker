@@ -35,8 +35,6 @@ public class DbContext
 
   public bool GetReport(ReportOptions reportOption, OrderOptions? orderOption)
   {
-    AnsiConsole.Clear();
-
     List<CodingSession> sessions = _sessionDataAccess.GetAllSessions(reportOption);
     List<CodingSession> orderedSessions;
     if (orderOption == OrderOptions.ASC)
@@ -63,24 +61,18 @@ public class DbContext
 
   public bool DeleteSession()
   {
-    AnsiConsole.Clear();
-
     _sessionDataAccess.DeleteSession();
     return true;
   }
 
   public bool UpdateSession()
   {
-    AnsiConsole.Clear();
-
     _sessionDataAccess.UpdateSession();
     return true;
   }
 
   public bool InsertSession()
   {
-    AnsiConsole.Clear();
-
     string startDate = UserInput.GetStartDate();
     string endDate = UserInput.GetEndDate(startDate);
     _sessionDataAccess.InsertSession(startDate, endDate);
@@ -89,15 +81,12 @@ public class DbContext
 
   public bool InsertSession(string startDate, string endDate)
   {
-    AnsiConsole.Clear();
     _sessionDataAccess.InsertSession(startDate, endDate);
     return true;
   }
 
   public bool GetAllSessions()
   {
-    AnsiConsole.Clear();
-
     List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
 
     ConsoleEngine.GetCodingSessionsTable(sessions);
