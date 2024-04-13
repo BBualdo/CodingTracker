@@ -22,7 +22,7 @@ public class DbContext
 
   public bool GetReport(ReportOptions reportOption, OrderOptions? orderOption)
   {
-    List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
+    List<CodingSession> sessions = _sessionDataAccess.GetAllSessions(reportOption);
     List<CodingSession> orderedSessions;
     if (orderOption == OrderOptions.ASC)
     {

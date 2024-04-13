@@ -1,4 +1,5 @@
-﻿using CodingTracker.Database.Helpers;
+﻿using CodingTracker.Database.enums;
+using CodingTracker.Database.Helpers;
 using CodingTracker.Database.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -23,6 +24,40 @@ public class SessionDataAccess
       connection.Open();
 
       string selectSql = "SELECT * FROM sessions";
+
+      sessions = connection.Query<CodingSession>(selectSql).ToList();
+    }
+
+    return sessions;
+  }
+
+  public List<CodingSession> GetAllSessions(ReportOptions reportOption)
+  {
+    List<CodingSession> sessions = new List<CodingSession>();
+    string selectSql;
+
+    switch (reportOption)
+    {
+      case ReportOptions.Daily:
+        selectSql = "SELECT * FROM sessions WHERE DATE(start_date) = DATE('now')";
+        break;
+      case ReportOptions.Weekly:
+        selectSql = "SELECT * FROM sessions WHERE strftime('%Y-%W', start_date) = strftime('%Y-%W', 'now')";
+        break;
+      case ReportOptions.Monthly:
+        selectSql = "SELECT * FROM sessions WHERE strftime('%Y-%m', start_date) = strftime('%Y-%m', 'now')";
+        break;
+      case ReportOptions.Yearly:
+        selectSql = "SELECT * FROM sessions WHERE strftime('%Y', start_date) = strftime('%Y', 'now')";
+        break;
+      default:
+        selectSql = "SELECT * FROM sessions";
+        break;
+    }
+
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
+    {
+      connection.Open();
 
       sessions = connection.Query<CodingSession>(selectSql).ToList();
     }

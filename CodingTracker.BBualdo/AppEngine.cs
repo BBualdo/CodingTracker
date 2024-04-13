@@ -133,13 +133,15 @@ public class AppEngine
 
   private OrderOptions? GetOrderOption()
   {
-    string choice = ConsoleEngine.GetSelection("REPORTS MENU", "Select order option:", ["Back", "Ascending", "Descending"]);
+    string choice = ConsoleEngine.GetSelection("REPORTS MENU", "Select order option:", ["Back", "Default", "Ascending", "Descending"]);
 
     switch (choice)
     {
       case "Back":
         ReportsMenu();
         break;
+      case "Default":
+        return null;
       case "Ascending":
         return OrderOptions.ASC;
       case "Descending":
