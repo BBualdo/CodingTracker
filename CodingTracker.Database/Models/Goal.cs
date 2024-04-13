@@ -8,10 +8,7 @@ public class Goal
   public int Target_Duration { get; set; }
   public int Is_Completed { get; set; }
 
-  public Goal()
-  {
-
-  }
+  public Goal() { }
 
   public Goal(int goalId, string startDate, string endDate, int targetDuration, int isCompleted)
   {
