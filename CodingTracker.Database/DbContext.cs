@@ -12,6 +12,7 @@ public class DbContext
   private readonly string _connectionString;
   private readonly SessionDataAccess _sessionDataAccess;
   private readonly GoalsDataAccess _goalsDataAccess;
+  public GoalTracker GoalTracker { get; set; }
 
   public DbContext()
   {
@@ -20,6 +21,22 @@ public class DbContext
     SeedData();
     _sessionDataAccess = new SessionDataAccess(_connectionString);
     _goalsDataAccess = new GoalsDataAccess(_connectionString);
+    GoalTracker = new GoalTracker();
+  }
+
+  public bool UpdateGoals()
+  {
+    List<CodingSession> sessions = _sessionDataAccess.GetAllSessions();
+    List<Goal> goals = _goalsDataAccess.GetAllGoals(false);
+    List<Goal> incompletedGoals = goals.Where(goal => !Convert.ToBoolean(goal.Is_Completed)).ToList();
+
+    foreach (Goal goal in incompletedGoals)
+    {
+      int isCompleted = GoalTracker.IsGoalCompleted(goal, sessions);
+      _goalsDataAccess.UpdateGoal(goal, isCompleted);
+    }
+
+    return true;
   }
 
   public bool AddGoal()
@@ -89,6 +106,7 @@ public class DbContext
 
   public bool InsertSession()
   {
+    UpdateGoals();
     string startDate = UserInput.GetStartDate();
     string endDate = UserInput.GetEndDate(startDate);
     _sessionDataAccess.InsertSession(startDate, endDate);
@@ -97,6 +115,7 @@ public class DbContext
 
   public bool InsertSession(string startDate, string endDate)
   {
+    UpdateGoals();
     _sessionDataAccess.InsertSession(startDate, endDate);
     return true;
   }

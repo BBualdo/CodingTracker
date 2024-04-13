@@ -15,6 +15,33 @@ public class GoalsDataAccess
     _connectionString = connectionString;
   }
 
+  public bool UpdateGoal(Goal goal, int isCompleted)
+  {
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
+    {
+      connection.Open();
+
+      string selectSql = $"SELECT EXISTS(SELECT 1 FROM goals WHERE goal_id={goal.Goal_Id})";
+
+      using (SqliteCommand selectCommand = new SqliteCommand(selectSql, connection))
+      {
+        if (Convert.ToInt32(selectCommand.ExecuteScalar()) == 0)
+        {
+          return false;
+        }
+      }
+
+      string updateSql = $"UPDATE goals SET is_completed={isCompleted} WHERE goal_id={goal.Goal_Id}";
+
+      using (SqliteCommand updateCommand = new SqliteCommand(updateSql, connection))
+      {
+        updateCommand.ExecuteNonQuery();
+      }
+    }
+
+    return true;
+  }
+
   public List<Goal> GetAllGoals(bool filterByCompleted)
   {
     List<Goal> goals = new List<Goal>();
