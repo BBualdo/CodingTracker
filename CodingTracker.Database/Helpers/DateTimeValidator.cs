@@ -9,9 +9,9 @@ public class DateTimeValidator
   {
     if (DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime temp))
     {
-      if (temp < new DateTime(2000, 1, 1) || temp > DateTime.Now)
+      if (temp < new DateTime(2000, 1, 1))
       {
-        AnsiConsole.Markup("[red]Date and time must be in the past and can't be older than 2000-01-01 00:00.[/] ");
+        AnsiConsole.Markup("[red]Date and time can't be older than 2000-01-01 00:00.[/] ");
         return false;
       }
 
@@ -33,6 +33,20 @@ public class DateTimeValidator
     }
 
     AnsiConsole.Markup($"[red]End date and time can't be older than start date. Please enter date newer than {startDate}.[/] ");
+    return false;
+  }
+
+  public static bool IsInThePast(string date)
+  {
+    if (DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out DateTime temp))
+    {
+      if (temp > DateTime.Now)
+      {
+        return false;
+      }
+      return true;
+    }
+
     return false;
   }
 }

@@ -22,6 +22,16 @@ public class DbContext
     _goalsDataAccess = new GoalsDataAccess(_connectionString);
   }
 
+  public bool AddGoal()
+  {
+    string startDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+    string endDate = UserInput.GetGoalEndDate(startDate);
+    int targetDuration = UserInput.GetTargetDuration(startDate, endDate);
+
+    _goalsDataAccess.AddGoal(startDate, endDate, targetDuration);
+    return true;
+  }
+
   public bool DeleteGoal()
   {
     _goalsDataAccess.DeleteGoal();

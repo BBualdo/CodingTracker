@@ -77,11 +77,22 @@ public class GoalsDataAccess
 
   }
 
-  public bool AddGoal()
+  public bool AddGoal(string startDate, string endDate, int targetDuration)
   {
-    string startDate = UserInput.GetStartDate();
-    string endDate = UserInput.GetEndDate(startDate);
+    using (SqliteConnection connection = new SqliteConnection(_connectionString))
+    {
+      connection.Open();
 
-    string insertSql = $"INSERT INTO goals(start_date, end_date, target_duration, is_completed) VALUES('{startDate}', '{endDate}', {targetDuration}, 0)";
+      string insertSql = $"INSERT INTO goals(start_date, end_date, target_duration, is_completed) VALUES('{startDate}', '{endDate}', {targetDuration}, 0)";
+
+      using (SqliteCommand insertCommand = new SqliteCommand(insertSql, connection))
+      {
+        insertCommand.ExecuteNonQuery();
+      }
+    }
+
+    AnsiConsole.Markup($"[green]Inserting completed![/] Good luck! Press any key to return to Main Menu");
+    Console.ReadKey();
+    return true;
   }
 }
