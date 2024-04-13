@@ -89,7 +89,7 @@ public class AppEngine
         // InsertGoal()
         break;
       case "Delete Goal":
-        // DeleteGoal()
+        Db.DeleteGoal();
         break;
       case "Get Completed Goals":
         Db.GetAllGoals(true);

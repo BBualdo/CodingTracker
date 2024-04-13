@@ -22,6 +22,12 @@ public class DbContext
     _goalsDataAccess = new GoalsDataAccess(_connectionString);
   }
 
+  public bool DeleteGoal()
+  {
+    _goalsDataAccess.DeleteGoal();
+    return true;
+  }
+
   public bool GetAllGoals(bool filterByCompleted = false)
   {
     List<Goal> goals = _goalsDataAccess.GetAllGoals(filterByCompleted);
