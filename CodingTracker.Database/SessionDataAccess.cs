@@ -30,15 +30,13 @@ public class SessionDataAccess
     return sessions;
   }
 
-  public bool InsertSession()
+  public bool InsertSession(string startDate, string endDate)
   {
+    int duration = DateTimeHelper.CalculateDuration(startDate, endDate);
+
     using (SqliteConnection connection = new SqliteConnection(_connectionString))
     {
       connection.Open();
-
-      string startDate = UserInput.GetStartDate();
-      string endDate = UserInput.GetEndDate(startDate);
-      int duration = DateTimeHelper.CalculateDuration(startDate, endDate);
 
       string insertSql = $"INSERT INTO sessions(start_date, end_date, duration) VALUES('{startDate}', '{endDate}', {duration})";
 
@@ -48,7 +46,7 @@ public class SessionDataAccess
       }
     }
 
-    AnsiConsole.Markup("[green]Inserting completed![/] Press any key to return to Main Menu");
+    AnsiConsole.Markup($"[green]Inserting completed![/] You were coding for {duration} minutes. Press any key to return to Main Menu");
     Console.ReadKey();
     return true;
   }

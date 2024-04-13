@@ -5,13 +5,13 @@ namespace CodingTracker.Database.Helpers;
 
 public class ConsoleEngine
 {
-  public static string GetSelection(string title, string[] choices)
+  public static string GetSelection(string header, string title, string[] choices)
   {
     AnsiConsole.Clear();
-    AnsiConsole.MarkupLine($"--------[bold green]{title}[/]--------");
+    AnsiConsole.MarkupLine($"--------[bold green]{header}[/]--------");
 
     string choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                                    .Title("What would you like to do?")
+                                    .Title(title)
                                     .HighlightStyle(new Style().Foreground(Color.Green))
                                     .AddChoices(choices)
                                     );

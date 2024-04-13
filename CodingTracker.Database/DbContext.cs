@@ -39,7 +39,16 @@ public class DbContext
   {
     AnsiConsole.Clear();
 
-    _sessionDataAccess.InsertSession();
+    string startDate = UserInput.GetStartDate();
+    string endDate = UserInput.GetEndDate(startDate);
+    _sessionDataAccess.InsertSession(startDate, endDate);
+    return true;
+  }
+
+  public bool InsertSession(string startDate, string endDate)
+  {
+    AnsiConsole.Clear();
+    _sessionDataAccess.InsertSession(startDate, endDate);
     return true;
   }
 
@@ -123,5 +132,4 @@ public class DbContext
 
     Console.Clear();
   }
-
 }

@@ -8,21 +8,31 @@ public class AppEngine
 {
   public DbContext Db { get; set; }
   public bool IsRunning { get; set; }
+  public Stopwatch Stopwatch { get; set; }
 
   public AppEngine()
   {
     Db = new DbContext();
     IsRunning = true;
+    Stopwatch = new Stopwatch();
   }
 
   public void MainMenu()
   {
-    string choice = ConsoleEngine.GetSelection("MAIN MENU", ["Start Coding", "Sessions", "Goals", "Close App"]);
+    string choice = ConsoleEngine.GetSelection("MAIN MENU", "What would you like to do?", ["Start Coding", "Sessions", "Goals", "Close App"]);
 
     switch (choice)
     {
       case "Start Coding":
-        // StartCoding()
+        string[]? dates = StartCoding();
+
+        if (dates == null)
+        {
+          AnsiConsole.Markup("[red]Something went wrong :([/]");
+          break;
+        }
+
+        Db.InsertSession(dates[0], dates[1]);
         break;
       case "Sessions":
         SessionsMenu();
@@ -39,7 +49,7 @@ public class AppEngine
 
   public void SessionsMenu()
   {
-    string choice = ConsoleEngine.GetSelection("SESSIONS MENU", ["Back", "Get All Sessions", "Insert Session", "Update Session", "Delete Session"]);
+    string choice = ConsoleEngine.GetSelection("SESSIONS MENU", "What would you like to do?", ["Back", "Get All Sessions", "Insert Session", "Update Session", "Delete Session"]);
 
     switch (choice)
     {
@@ -62,7 +72,7 @@ public class AppEngine
 
   public void GoalsMenu()
   {
-    string choice = ConsoleEngine.GetSelection("GOALS MENU", ["Back", "Get All Goals", "Add Goal", "Delete Goal", "Get Completed Goals"]);
+    string choice = ConsoleEngine.GetSelection("GOALS MENU", "What would you like to do?", ["Back", "Get All Goals", "Add Goal", "Delete Goal", "Get Completed Goals"]);
 
     switch (choice)
     {
@@ -81,5 +91,24 @@ public class AppEngine
         // GetCompletedGoals()
         break;
     }
+  }
+
+  private string[]? StartCoding()
+  {
+    AnsiConsole.Clear();
+    Stopwatch.Start();
+    AnsiConsole.Markup("Your coding session is [green]active[/].\n");
+    string stop = ConsoleEngine.GetSelection("CODING SESSION", "Your coding session is [green]Active[/]. Press Enter when you are done.", ["Stop Coding"]);
+
+    if (stop == "Stop Coding")
+    {
+      Stopwatch.Stop();
+
+      string startDate = Stopwatch.StartDate.ToString("dd-MM-yy HH:mm");
+      string endDate = Stopwatch.StopDate.ToString("dd-MM-yy HH:mm");
+      return [startDate, endDate];
+    }
+
+    return null;
   }
 }
